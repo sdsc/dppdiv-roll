@@ -1,0 +1,3 @@
+#%Module1.0
+setenv DPPDIVHOME /opt/dppdiv
+prepend-path PATH /opt/dppdiv/bin
