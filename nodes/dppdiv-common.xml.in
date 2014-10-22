@@ -3,7 +3,7 @@
 <kickstart>
 
 <description>
-DPPDIV
+DPPDIV - http://phylo.bio.ku.edu/content/tracy-heath-dppdiv
 </description>
 
 <copyright>
@@ -11,7 +11,8 @@ Copyright (c) 2000 - 2011 The Regents of the University of California.
 All rights reserved. Rocks(r) v5.1 www.rocksclusters.org
 </copyright>
 
-<package>dppdiv_ROLLCOMPILER_ROLLMPI_ROLLNETWORK</package>
+<package>dppdiv_COMPILERNAME_MPINAME</package>
 <package>dppdiv-modules</package>
+<package>dppdiv-roll-test</package>
 
 </kickstart>

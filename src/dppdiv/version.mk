@@ -1,14 +1,26 @@
-NAME               = dppdiv_$(ROLLCOMPILER)_$(ROLLMPI)_$(ROLLNETWORK)
-VERSION            = pll_1.0
-RELEASE            = 1
-PKGROOT            = /opt/dppdiv
+ifndef ROLLCOMPILER
+  ROLLCOMPILER = gnu
+endif
+COMPILERNAME := $(firstword $(subst /, ,$(ROLLCOMPILER)))
 
-SRC_SUBDIR         = dppdiv
+ifndef ROLLMPI
+  ROLLMPI = openmpi
+endif
+MPINAME := $(firstword $(subst /, ,$(ROLLMPI)))
 
-SOURCE_NAME        = dppdiv
-SOURCE_VERSION     = $(VERSION)
-SOURCE_SUFFIX      = tar.gz
-SOURCE_PKG         = $(SOURCE_NAME)-$(SOURCE_VERSION).$(SOURCE_SUFFIX)
-SOURCE_DIR         = $(SOURCE_PKG:%.$(SOURCE_SUFFIX)=%)
+NAME           = dppdiv-pll_$(COMPILERNAME)_$(MPINAME)
+VERSION        = 1.0
+RELEASE        = 2
+PKGROOT        = /opt/dppdiv
 
-TAR_GZ_PKGS        = $(SOURCE_PKG)
+SRC_SUBDIR     = dppdiv
+
+SOURCE_NAME    = dppdiv-pll
+SOURCE_SUFFIX  = tar.gz
+SOURCE_VERSION = $(VERSION)
+SOURCE_PKG     = $(SOURCE_NAME)_$(SOURCE_VERSION).$(SOURCE_SUFFIX)
+SOURCE_DIR     = $(SOURCE_PKG:%.$(SOURCE_SUFFIX)=%)
+
+TAR_GZ_PKGS    = $(SOURCE_PKG)
+
+RPM.EXTRAS     = AutoReq:No

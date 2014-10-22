@@ -53,18 +53,6 @@
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 # 
 # @Copyright@
-#
-# $Log$
-
-ifndef ROLLCOMPILER
-  ROLLCOMPILER = gnu
-endif
-ifndef ROLLNETWORK
-  ROLLNETWORK = ib
-endif
-ifndef ROLLMPI
-  ROLLMPI = mvapich2
-endif
 
 REDHAT.ROOT = $(CURDIR)/../../
 
@@ -72,49 +60,25 @@ REDHAT.ROOT = $(CURDIR)/../../
 include Rules.mk
 include pull.mk
 
-COMPILERSETUP = \
-  if test -e /etc/profile.d/modules.sh; then \
-    . /etc/profile.d/modules.sh; \
-    latestModule=`module avail 2>&1 | grep -o '$(ROLLCOMPILER)/[^ (]*' | sed 's/$(ROLLCOMPILER).//' | sort -t. -k1,1n -k2,2n -k3,3n | tail -1`; \
-    module load $(ROLLCOMPILER)/$${latestModule}; \
-  fi
-
-ifeq ("$(ROLLNETWORK)", "eth")
-  MPIMODULE = $(ROLLMPI)
-else
-  MPIMODULE = $(ROLLMPI)_$(ROLLNETWORK)
-endif
-
-MPISETUP = \
-  if test -e /etc/profile.d/modules.sh; then \
-    . /etc/profile.d/modules.sh; \
-    module load $(MPIMODULE); \
-  fi; \
-  export MPI_HOME=`which mpicxx | perl -pe 's!/bin/.*!!'`; \
-  if test -z "$${MPI_HOME}"; then \
-    export MPI_HOME=/opt/$(ROLLMPI); \
-  fi; \
-  echo Using MPI from $${MPI_HOME}; \
-  export PATH=$${PATH}:$${MPI_HOME}/bin; \
-  export LD_LIBRARY_PATH=$${LD_LIBRARY_PATH}:$${MPI_HOME}/lib
-
-ROLL_openmpi_mx = \#
-ROLL_openmpi_ib = \#
-ROLL_mvapich2_ib = \#
-ROLL_vsmp_ib  = \#
-ROLL_mpich2_ib = \#
-ROLL_mpich2_mx = \#
-
 CC = gcc
 FCC = gfortran
-ifeq ("$(ROLLCOMPILER)", "intel")
+ifeq ("$(COMPILERNAME)", "intel")
   CC = icc
   FCC = ifort
-endif
-ifeq ("$(ROLLCOMPILER)", "pgi")
+else ifeq ("$(COMPILERNAME)", "pgi")
   CC = pgcc
   FCC = pgf90
 endif
+
+COMPILERSETUP =  \
+  module load $(ROLLCOMPILER) || true; \
+  echo === Compiler and version ===; \
+  $(CC) --version
+
+MPISETUP = \
+  module load $(ROLLMPI) || true; \
+  echo === MPIHOME ===; \
+  echo $${MPIHOME}
 
 build: $(SRC_DIRS)
 	( \
@@ -126,20 +90,20 @@ build: $(SRC_DIRS)
 	  $(MAKE) -f Makefile.PTHREADS.AVX; \
 	  /bin/rm obj/*.o ;\
 	  $(MAKE) -f Makefile.MPI.AVX; \
-          /bin/rm obj/*.o \
+	  /bin/rm obj/*.o \
 	)
 	@echo "::: Package $(NAME) build complete :::"
 
 install::
-	mkdir -p -m755 $(ROOT)/$(PKGROOT)
+	mkdir -p -m 755 $(ROOT)/$(PKGROOT)
+	mkdir -p -m 755 $(ROOT)/$(PKGROOT)/bin
 	( \
- 	   cd $(SOURCE_DIR); \
-	   mkdir $(ROOT)/$(PKGROOT)/bin; \
-	   cp bin/* $(ROOT)/$(PKGROOT)/bin; \
-	   cp SDSCscripts/* $(ROOT)/$(PKGROOT)/bin; \
-	   cp COPYING $(ROOT)/$(PKGROOT); \
-	   cp README* $(ROOT)/$(PKGROOT); \
-	   cp -r SDSC_README.txt $(ROOT)/$(PKGROOT) \
+	  cd $(SOURCE_DIR); \
+	  cp bin/* $(ROOT)/$(PKGROOT)/bin; \
+	  cp SDSCscripts/* $(ROOT)/$(PKGROOT)/bin; \
+	  cp COPYING $(ROOT)/$(PKGROOT); \
+	  cp README* $(ROOT)/$(PKGROOT); \
+	  cp -r SDSC_README.txt $(ROOT)/$(PKGROOT) \
 	)
 	@echo "::: Package $(NAME) install complete :::"
 
