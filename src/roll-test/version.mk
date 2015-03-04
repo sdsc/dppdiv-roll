@@ -1,4 +1,4 @@
-NAME       = dppdiv-roll-test
+NAME       = sdsc-dppdiv-roll-test
 VERSION    = 1
 RELEASE    = 0
 PKGROOT    = /root/rolltests

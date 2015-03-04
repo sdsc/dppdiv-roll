@@ -1,3 +1,6 @@
 #%Module1.0
+module-whatis "dppdiv phylogenetics package"
+module-whatis "Version: VERSION"
 setenv DPPDIVHOME /opt/dppdiv
 prepend-path PATH /opt/dppdiv/bin
+module load ROLLCOMPILER ROLLMPI

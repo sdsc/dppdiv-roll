@@ -58,32 +58,28 @@ REDHAT.ROOT = $(CURDIR)/../../
 
 -include $(ROCKSROOT)/etc/Rules.mk
 include Rules.mk
-include pull.mk
+include $(SDSCDEVEL)/Pull.mk
+include $(SDSCDEVEL)/Rules.mk
 
-CC = gcc
-FCC = gfortran
-ifeq ("$(COMPILERNAME)", "intel")
-  CC = icc
-  FCC = ifort
-else ifeq ("$(COMPILERNAME)", "pgi")
-  CC = pgcc
-  FCC = pgf90
-endif
+$(NAME).spec: DESCRIPTION LICENSE
 
-COMPILERSETUP =  \
-  module load $(ROLLCOMPILER) || true; \
-  echo === Compiler and version ===; \
-  $(CC) --version
+DESCRIPTION:
+	$(MODULE_LOAD_CC); \
+	$(MODULE_LOAD_MPI); \
+	( \
+	  $(DESCRIBE_PKG); \
+	  $(DESCRIBE_CC); \
+	  $(DESCRIBE_MPI); \
+	) > $@
 
-MPISETUP = \
-  module load $(ROLLMPI) || true; \
-  echo === MPIHOME ===; \
-  echo $${MPIHOME}
+LICENSE: $(SRC_DIRS)
+	$(CHECK_LICENSE_FILES)
+	echo BSD > $@
 
 build: $(SRC_DIRS)
 	( \
-	  $(COMPILERSETUP); \
-	  $(MPISETUP); \
+	  $(MODULE_LOAD_CC); \
+	  $(MODULE_LOAD_MPI); \
 	  cd $(SOURCE_DIR); \
 	  $(MAKE) -f Makefile.AVX; \
 	  /bin/rm obj/*.o ;\
@@ -95,17 +91,15 @@ build: $(SRC_DIRS)
 	@echo "::: Package $(NAME) build complete :::"
 
 install::
-	mkdir -p -m 755 $(ROOT)/$(PKGROOT)
 	mkdir -p -m 755 $(ROOT)/$(PKGROOT)/bin
 	( \
 	  cd $(SOURCE_DIR); \
 	  cp bin/* $(ROOT)/$(PKGROOT)/bin; \
 	  cp SDSCscripts/* $(ROOT)/$(PKGROOT)/bin; \
-	  cp COPYING $(ROOT)/$(PKGROOT); \
 	  cp README* $(ROOT)/$(PKGROOT); \
-	  cp -r SDSC_README.txt $(ROOT)/$(PKGROOT) \
+	  cp SDSC_README.txt $(ROOT)/$(PKGROOT) \
 	)
 	@echo "::: Package $(NAME) install complete :::"
 
 clean::
-	rm -rf $(SOURCE_DIR)
+	rm -rf $(SOURCE_DIR) DESCRIPTION LICENSE

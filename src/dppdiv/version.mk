@@ -4,13 +4,13 @@ endif
 COMPILERNAME := $(firstword $(subst /, ,$(ROLLCOMPILER)))
 
 ifndef ROLLMPI
-  ROLLMPI = openmpi
+  ROLLMPI = rocks-openmpi
 endif
 MPINAME := $(firstword $(subst /, ,$(ROLLMPI)))
 
-NAME           = dppdiv-pll_$(COMPILERNAME)_$(MPINAME)
+NAME           = sdsc-dppdiv-pll
 VERSION        = 1.0
-RELEASE        = 2
+RELEASE        = 3
 PKGROOT        = /opt/dppdiv
 
 SRC_SUBDIR     = dppdiv
