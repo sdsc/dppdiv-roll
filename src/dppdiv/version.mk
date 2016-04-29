@@ -10,7 +10,7 @@ MPINAME := $(firstword $(subst /, ,$(ROLLMPI)))
 
 NAME           = sdsc-dppdiv-pll
 VERSION        = 1.0
-RELEASE        = 3
+RELEASE        = 4
 PKGROOT        = /opt/dppdiv
 
 SRC_SUBDIR     = dppdiv
