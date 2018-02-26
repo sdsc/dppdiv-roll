@@ -75,7 +75,7 @@ Subsequent installs of compute and login nodes will then include the contents
 of the dppdiv-roll.  To avoid cluttering the cluster frontend with unused
 software, the dppdiv-roll is configured to install only on compute and
 login nodes. To force installation on your frontend, run this command after
-adding the abinit-roll to your distro
+adding the dppdiv-roll to your distro
 
 ```shell
 % rocks run roll dppdiv host=NAME | bash
