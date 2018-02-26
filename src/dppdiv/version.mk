@@ -10,7 +10,7 @@ MPINAME := $(firstword $(subst /, ,$(ROLLMPI)))
 
 NAME           = sdsc-dppdiv-pll
 VERSION        = 1.0
-RELEASE        = 4
+RELEASE        = 5
 PKGROOT        = /opt/dppdiv
 
 SRC_SUBDIR     = dppdiv
@@ -23,4 +23,5 @@ SOURCE_DIR     = $(SOURCE_PKG:%.$(SOURCE_SUFFIX)=%)
 
 TAR_GZ_PKGS    = $(SOURCE_PKG)
 
-RPM.EXTRAS     = AutoReq:No
+RPM.EXTRAS     = AutoReq:No\nAutoProv:No
+RPM.PREFIX     = $(PKGROOT)
